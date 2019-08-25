@@ -14,7 +14,9 @@
 Route::redirect('/', '/products')->name('root');//->middleware('verified');
 
 Auth::routes(['verify' => true]);
+Route::get('products', 'ProductsController@index')->name('products.index');
 
+Route::get('products/{product}', 'ProductsController@show')->name('products.show');
 Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::get('user_addresses', 'UserAddressesController@index')->name('user_addresses.index');
     Route::get('user_addresses/create', 'UserAddressesController@create')->name('user_addresses.create');
@@ -23,7 +25,6 @@ Route::group(['middleware' => ['auth', 'verified']], function() {
     Route::get('user_addresses/{user_address}', 'UserAddressesController@edit')->name('user_addresses.edit');
     Route::put('user_addresses/{user_address}', 'UserAddressesController@update')->name('user_addresses.update');
     Route::delete('user_addresses/{user_address}', 'UserAddressesController@destroy')->name('user_addresses.destroy');
-    Route::get('products', 'ProductsController@index')->name('products.index');
 
 });
 

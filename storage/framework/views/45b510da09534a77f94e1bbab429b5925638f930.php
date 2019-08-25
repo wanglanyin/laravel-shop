@@ -32,9 +32,13 @@
                             <div class="col-3 product-item">
                                 <div class="product-content">
                                     <div class="top">
-                                        <div class="img"><img src="<?php echo e($product->image_url, false); ?>" alt=""></div>
+                                        <div class="img">
+                                            <a href="<?php echo e(route('products.show',$product->id), false); ?>">
+                                            <img src="<?php echo e($product->image_url, false); ?>" alt=""></a></div>
+
                                         <div class="price"><b>￥</b><?php echo e($product->price, false); ?></div>
-                                        <div class="title"><?php echo e($product->title, false); ?></div>
+                                        <div class="title">
+                                            <a href="<?php echo e(route('products.show',$product->id), false); ?>"><?php echo e($product->title, false); ?></a></div>
                                     </div>
                                     <div class="bottom">
                                         <div class="sold_count">销量 <span><?php echo e($product->sold_count, false); ?>笔</span></div>
