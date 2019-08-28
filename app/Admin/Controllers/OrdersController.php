@@ -183,6 +183,7 @@ class OrdersController extends Controller
     }
 
     public function ship(Order $order,Request $request) {
+        $this->authorize('own',$order);
         if(!$order->paid_at) {
             throw new InvalidRequestException('订单未付款');
         }
@@ -209,5 +210,15 @@ class OrdersController extends Controller
             'ship_data'   => $data,
         ]);
         return redirect()->back();
+    }
+
+    public function received(Order $order,Request $request) {
+        $this->authorize('own', $order);
+        if ($order->ship_status !== Order::SHIP_STATUS_DELIVERED) {
+            throw new InvalidRequestException('发货状态不正确');
+        }
+        $order->update(['ship_status' => Order::SHIP_STATUS_RECEIVED]);
+
+        return $order;
     }
 }
