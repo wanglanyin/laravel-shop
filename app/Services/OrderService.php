@@ -1,5 +1,6 @@
 <?php
 namespace App\Services;
+use App\Models\CouponCode;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Order;
@@ -8,8 +9,8 @@ use App\Exceptions\InvalidRequestException;
 use App\Jobs\CloseOrder;
 use Carbon\Carbon;
 class OrderService {
-    public function store(User $user,UserAddress $address,$remark,$itmes) {
-        $order = \DB::transaction(function() use($user,$address,$remark,$itmes) {
+    public function store(User $user,UserAddress $address,$remark,$itmes,CouponCode $coupon) {
+        $order = \DB::transaction(function() use($user,$address,$remark,$itmes,$coupon) {
             //$address = UserAddress::find($request->input('address_id'));
             $address->update(['last_used_at' => Carbon::now()]);
 
@@ -45,6 +46,19 @@ class OrderService {
                     throw new InvalidRequestException('该商品库存不足');
                 }
             }
+            if ($coupon) {
+                // 总金额已经计算出来了，检查是否符合优惠券规则
+                $coupon->checkAvailable($totalAmount);
+                // 把订单金额修改为优惠后的金额
+                $totalAmount = $coupon->getAdjustedPrice($totalAmount);
+                // 将订单与优惠券关联
+                $order->couponCode()->associate($coupon);
+                // 增加优惠券的用量，需判断返回值
+                if ($coupon->changeUsed() <= 0) {
+                    throw new CouponCodeUnavailableException('该优惠券已被兑完');
+                }
+            }
+
             $order->update(['total_amount' => $totalAmount]);
             $skuIds = collect($itmes)->pluck('sku_id');
             app(CartService::class)->remove($skuIds);
