@@ -9,7 +9,10 @@ use App\Exceptions\InvalidRequestException;
 use App\Jobs\CloseOrder;
 use Carbon\Carbon;
 class OrderService {
-    public function store(User $user,UserAddress $address,$remark,$itmes,CouponCode $coupon) {
+    public function store(User $user,UserAddress $address,$remark,$itmes,CouponCode $coupon=null) {
+        if ($coupon) {
+            $coupon->checkAvailable($user);
+        }
         $order = \DB::transaction(function() use($user,$address,$remark,$itmes,$coupon) {
             //$address = UserAddress::find($request->input('address_id'));
             $address->update(['last_used_at' => Carbon::now()]);
@@ -48,7 +51,7 @@ class OrderService {
             }
             if ($coupon) {
                 // 总金额已经计算出来了，检查是否符合优惠券规则
-                $coupon->checkAvailable($totalAmount);
+                $coupon->checkAvailable($user,$totalAmount);
                 // 把订单金额修改为优惠后的金额
                 $totalAmount = $coupon->getAdjustedPrice($totalAmount);
                 // 将订单与优惠券关联
