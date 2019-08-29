@@ -15506,7 +15506,9 @@ body {
   padding-right: 20px;
 }
 
-.orders-show-page .payment-buttons {
+.orders-show-page .payment-buttons,
+.orders-show-page .receive-button,
+.orders-show-page .refund-button {
   margin-top: 10px;
   padding-right: 10px;
 }
