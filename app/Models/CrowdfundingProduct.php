@@ -18,6 +18,7 @@ class CrowdfundingProduct extends Model
 
     protected $fillable = ['total_amount', 'target_amount', 'user_count', 'status', 'end_at'];
     public $timestamps = false;
+    public $dates = ['end_at'];
 
     public function product()
     {
