@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use App\Exceptions\InvalidRequestException;
 
@@ -56,6 +57,7 @@ class ProductsController extends Controller
         ];
 
         $category =  $category ?? null;
+        //$categoryTree = $categoryService->getCategoryTree();
         return view('products.index',compact('products','filters','category'));
     }
 
