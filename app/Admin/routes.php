@@ -38,4 +38,11 @@ Route::group([
     $router->post('categories','CategoriesController@store');
     $router->put('categories/{id}','CategoriesController@update');
     $router->delete('categories/{id}', 'CategoriesController@destroy');
+
+    $router->get('crowdfunding_products','CrowdfundingProductsController@index');
+    $router->get('crowdfunding_products/create','CrowdfundingProductsController@create');
+    $router->post('crowdfunding_products','CrowdfundingProductsController@store');
+    $router->get('crowdfunding_products/{id}/edit','CrowdfundingProductsController@edit');
+    $router->put('crowdfunding_products/{id}','CrowdfundingProductsController@update');
+    $router->delete('crowdfunding_products/{id}','CrowdfundingProductsController@destroy');
 });
