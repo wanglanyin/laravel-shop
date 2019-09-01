@@ -47,7 +47,7 @@ class RefundCrowdfundingOrders implements ShouldQueue
             })
             ->get()
             ->each(function (Order $order) use ($orderService) {
-                $orderService->refundOrder($order);
+                $orderService->_refundOrder($order);
             });
     }
 }
