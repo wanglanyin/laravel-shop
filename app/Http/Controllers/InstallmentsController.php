@@ -13,4 +13,16 @@ class InstallmentsController extends Controller
             ->paginate(10);
         return view('installments.index',compact('installments'));
     }
+
+    public function show(Installment $installment) {
+        //dd($installment->order());
+        $this->authorize('own', $installment);
+        $items = $installment->items()->orderBy('sequence')->get();
+        return view('installments.show', [
+            'installment' => $installment,
+            'items'       => $items,
+            // 下一个未完成还款的还款计划
+            'nextItem'    => $items->where('paid_at', null)->first(),
+        ]);
+    }
 }
