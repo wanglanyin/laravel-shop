@@ -61,6 +61,8 @@ Route::post('installments/alipay/notify', 'InstallmentsController@alipayNotify')
 Route::get('products/{product}', 'ProductsController@show')->name('products.show');
 Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
 
+Route::post('installments/wechat/refund_notify', 'InstallmentsController@wechatRefundNotify')->name('installments.wechat.refund_notify');
+
 /*Route::get('alipay', function() {
     return app('alipay')->web([
         'out_trade_no' => time(),
