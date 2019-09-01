@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPaid;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Exceptions\InvalidRequestException;
 class PaymentController extends Controller
@@ -22,7 +24,7 @@ class PaymentController extends Controller
 
     public function alipayReturn() {
         try {
-            app('alipay')->verify();
+            $data = app('alipay')->verify();
         } catch (\Exception $e) {
             return view('pages.error', ['msg' => '数据不正确']);
         }
@@ -53,6 +55,7 @@ class PaymentController extends Controller
             'payment_method' => 'alipay', // 支付方式
             'payment_no'     => $data->trade_no, // 支付宝订单号
         ]);
+        $this->afterPaid($order);
 
         return app('alipay')->success();
     }
@@ -83,6 +86,12 @@ class PaymentController extends Controller
             ]);
         }
 
+        $this->afterPaid($order);
         return app('wechat_pay')->success();
+    }
+
+    protected function afterPaid(Order $order)
+    {
+        event(new OrderPaid($order));
     }
 }
