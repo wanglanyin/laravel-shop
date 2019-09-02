@@ -14,7 +14,7 @@ class Product extends Model
         self::TYPE_NORMAL  => '普通商品',
     ];
 
-    protected $fillable = [
+    protected $fillable = ['long_title',
         'title', 'description', 'image', 'on_sale',
         'rating', 'sold_count', 'review_count', 'price','type'
     ];
